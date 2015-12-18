@@ -20,50 +20,52 @@ var T = new Twit({
 	access_token_secret: twitterKeys.accessTokenSecret
 });
 
-var matchingTweet;
-
-// maybe put inside a while loop and check to end if a variable becomes true then stop
-
-// also need to check if true tweet === previously seen tweet and not send another text
+var matchingTweet = '';
 
 // user's twitter handle and number of posts to check
-var options = { screen_name: 'dalywebdev',
-                count: 3 };
+var options = { screen_name: 'oculus',
+                count: 1 };
 
-// Function to check user's previous 3 tweets for certain keywords
+// Function to check user's most recent tweet for certain keywords
 function getRecentTweets() {
-	T.get('statuses/user_timeline', options , function(err, data) {
+	T.get('statuses/user_timeline', options , function(err, tweet) {
 		if (err) {
 			console.log(err);
 		}
-		data.forEach(function(tweet) {
-			//make tweets lowercase to check for equality easier
-			var tweetCased = tweet.text.toLowerCase();
-			// If any of these words appear evaluates to true
-			if (tweetCased.indexOf('testing') > -1 ||
-				tweetCased.indexOf('preorder') > -1 || 
-				tweetCased.indexOf('pre-order') > -1 ||
-				tweetCased.indexOf('buy') > -1 ||
-				tweetCased.indexOf('launch') > -1) {
+		// T.get returns array of length one, so grab the array item
+		var latestTweet = tweet[0];
+		console.log(latestTweet.text);
 
-				console.log(tweet);
-				client.messages.create({
-					body: tweet.text,
-					to: phoneNumbers.myNumber,
-					from: phoneNumbers.twilioNumber
-				}, function(err) {
-					console.log(err);
-				});
+		var tweetCased = latestTweet.text.toLowerCase();
+
+		// If any of these words appear in the tweet, evaluates to true
+		if (tweetCased.indexOf('testing') > -1 ||
+			tweetCased.indexOf('preorder') > -1 || 
+			tweetCased.indexOf('pre-order') > -1 ||
+			tweetCased.indexOf('buy') > -1 ||
+			tweetCased.indexOf('launch') > -1) {
+
+			// Check if we've seen this tweet before and if so do not execute text message again
+			if (latestTweet.text !== matchingTweet) {
+				// client.messages.create({
+				// 	body: tweet.text,
+				// 	to: phoneNumbers.myNumber,
+				// 	from: phoneNumbers.twilioNumber
+				// }, function(err) {
+				// 	console.log(err);
+				// });
+				console.log('I\'m different than the previous tweet that matched the criteria!!!!');
+				console.log(latestTweet.text);
 			}
-		});
+
+			matchingTweet = latestTweet.text;
+		}
 		console.log('------------');
 	});
 };
 
-getRecentTweets();
-
-// Checks user's tweets every 5 minutes for a match
-// setInterval(getRecentTweets, 1000 * 60 * 5);
+// Checks user's tweets every 15 seconds for a match
+setInterval(getRecentTweets, 5000);
 
 
 
