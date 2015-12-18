@@ -47,25 +47,21 @@ function getRecentTweets() {
 
 			// Check if we've seen this tweet before and if so do not execute text message again
 			if (latestTweet.text !== matchingTweet) {
-				// client.messages.create({
-				// 	body: tweet.text,
-				// 	to: phoneNumbers.myNumber,
-				// 	from: phoneNumbers.twilioNumber
-				// }, function(err) {
-				// 	console.log(err);
-				// });
-				console.log('I\'m different than the previous tweet that matched the criteria!!!!');
-				console.log(latestTweet.text);
+				client.messages.create({
+					body: latestTweet.text,
+					to: phoneNumbers.myNumber,
+					from: phoneNumbers.twilioNumber
+				}, function(err) {
+					console.log(err);
+				});
 			}
-
 			matchingTweet = latestTweet.text;
 		}
-		console.log('------------');
 	});
 };
 
 // Checks user's tweets every 15 seconds for a match
-setInterval(getRecentTweets, 5000);
+setInterval(getRecentTweets, 15000);
 
 
 
