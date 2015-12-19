@@ -34,13 +34,11 @@ function getRecentTweets() {
 		}
 		// T.get returns array of length one, so grab the array item
 		var latestTweet = tweet[0];
-		console.log(latestTweet.text);
 
 		var tweetCased = latestTweet.text.toLowerCase();
 
 		// If any of these words appear in the tweet, evaluates to true
-		if (tweetCased.indexOf('testing') > -1 ||
-			tweetCased.indexOf('preorder') > -1 || 
+		if (tweetCased.indexOf('preorder') > -1 || 
 			tweetCased.indexOf('pre-order') > -1 ||
 			tweetCased.indexOf('buy') > -1 ||
 			tweetCased.indexOf('launch') > -1) {
@@ -62,6 +60,8 @@ function getRecentTweets() {
 
 // Checks user's tweets every 15 seconds for a match
 setInterval(getRecentTweets, 15000);
+
+
 
 
 
